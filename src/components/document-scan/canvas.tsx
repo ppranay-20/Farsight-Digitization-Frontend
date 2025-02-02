@@ -61,14 +61,6 @@ export default function Canvas({ images, processedImage }: CanvasProps) {
     // if No selected field, return
     if (!selectedField || !selectedField.coordinates) return;
 
-    //  Get the actual displayed dimensions
-    const displayedWidth = canvas.width;
-    const displayedHeight = canvas.height;
-
-    // Calculate the scale factor
-    const scaleX = displayedWidth / image.naturalWidth;
-    const scaleY = displayedHeight / image.naturalHeight;
-
     // Convert coordinates to numbers and handle the order [ymin, xmin, ymax, xmax]
     const [ymin, xmin, ymax, xmax] = selectedField.coordinates.map((coord) =>
       Number(coord)

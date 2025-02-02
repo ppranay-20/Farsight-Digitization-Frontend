@@ -12,10 +12,7 @@ interface CanvasProps {
   processedImage: { leftImage: string; rightImage: string };
 }
 
-export default function Canvas({
-  images,
-  processedImage,
-}: CanvasProps) {
+export default function Canvas({ images, processedImage }: CanvasProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [scale, setScale] = useState(1);
@@ -43,7 +40,7 @@ export default function Canvas({
 
   // Redraw the bounding box when the selected field changes or the image is loaded
   useEffect(() => {
-    if(image) {
+    if (image) {
       drawBoundingBoxes();
     }
   }, [image, selectedField]);
@@ -54,6 +51,12 @@ export default function Canvas({
     const canvas = canvasRef.current;
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
+
+    // Clear previous drawings
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    // Draw the image first
+    ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
 
     // if No selected field, return
     if (!selectedField || !selectedField.coordinates) return;
@@ -66,49 +69,44 @@ export default function Canvas({
     const scaleX = displayedWidth / image.naturalWidth;
     const scaleY = displayedHeight / image.naturalHeight;
 
-    // Get the coordinates from selected field
-    const [x1, y1, x2, y2] = selectedField.coordinates.map((coord: string | number) => {
-      return Number(coord);
-    });
+    // Convert coordinates to numbers and handle the order [ymin, xmin, ymax, xmax]
+    const [ymin, xmin, ymax, xmax] = selectedField.coordinates.map((coord) =>
+      Number(coord)
+    );
 
-    // Scale coordinates to match canvas size
-    const scaledX1 = x1 * scaleX;
-    const scaledY1 = y1 * scaleY;
-    const scaledWidth = (x2 - x1) * scaleX;
-    const scaledHeight = (y2 - y1) * scaleY;
+    // Denormalize coordinates (assuming they are normalized to 1000)
+    const abs_x1 = (xmin / 1000) * canvas.width;
+    const abs_y1 = (ymin / 1000) * canvas.height;
+    const abs_x2 = (xmax / 1000) * canvas.width;
+    const abs_y2 = (ymax / 1000) * canvas.height;
+
+    // Calculate width and height
+    const width = abs_x2 - abs_x1;
+    const height = abs_y2 - abs_y1;
 
     // Set styles for bounding box
-    ctx.strokeStyle = "rgba(255, 0, 0, 0.8)";
-    ctx.lineWidth = 2;
-    ctx.fillStyle = "rgba(255, 0, 0, 0.1)";
+    ctx.strokeStyle = "rgba(0, 0, 255, 0.8)";
+    ctx.lineWidth = 4;
 
-     // Draw filled rectangle with semi-transparent color
-     ctx.fillRect(scaledX1, scaledY1, scaledWidth, scaledHeight);
-    
-     // Draw border
-     ctx.strokeRect(scaledX1, scaledY1, scaledWidth, scaledHeight);
- 
-     // Add debug logging
-     console.log('Drawing bounding box with:', {
-         originalCoords: { x1, y1, x2, y2 },
-         scaledCoords: { 
-             x: scaledX1, 
-             y: scaledY1, 
-             width: scaledWidth, 
-             height: scaledHeight 
-         },
-         scale: { scaleX, scaleY },
-         imageSize: { 
-             natural: { 
-                 width: image.naturalWidth, 
-                 height: image.naturalHeight 
-             },
-             canvas: { 
-                 width: canvas.width, 
-                 height: canvas.height 
-             }
-         }
-     });
+    // Draw border
+    ctx.strokeRect(abs_x1, abs_y1, width, height);
+
+    // Add debug logging
+    console.log('Drawing bounding box with:', {
+      originalCoords: { ymin, xmin, ymax, xmax },
+      denormalizedCoords: { 
+        x1: abs_x1, 
+        y1: abs_y1, 
+        x2: abs_x2, 
+        y2: abs_y2,
+        width,
+        height
+      },
+      canvasSize: { 
+        width: canvas.width, 
+        height: canvas.height 
+      }
+    });
   };
 
   // Handle ESC key press

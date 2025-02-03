@@ -4,7 +4,7 @@ import { Suspense } from "react"
 
 export default async function DocumentScanPage() {
   const fields = await getTemplateFields("679332bb53ea3b75545e4ebc")
-  const userResponse = await getUserResponse("679cc5fe9a9aca4cda688ef5")
+  const userResponse = await getUserResponse("679dcb9bc1ab572ed81377a8")
 
   return (
     <Suspense fallback={<div>Loading...</div>}>

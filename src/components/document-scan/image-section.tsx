@@ -1,5 +1,5 @@
 import Image from "next/image";
-import Canvas from "./canvas";
+import Canvas from "./image-section/canvas";
 import image from "../../../assets/67925987b13a70923afc873a.jpeg"
 import { getImagesFromPages, getPagesFromDocumentInstance, getProcessedImage, getUserResponse } from "@/actions/documents";
 import { Suspense } from "react";

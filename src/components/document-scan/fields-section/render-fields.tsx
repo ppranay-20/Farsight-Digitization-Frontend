@@ -13,6 +13,7 @@ import {
 } from "@/components/ui/select"
 import { useState } from "react"
 import { Field, UserResponse } from "@/types/document-action"
+import { updateUserResponse } from "@/actions/documents"
 
 interface FieldsSectionProps {
   fields: Field[]
@@ -42,13 +43,29 @@ export default function RenderFields({ fields, userResponse }: FieldsSectionProp
     setSelectedRow(nextRow)
   }
 
-  const handleSaveAllData = (lastRowData: any) => {
+  const handleSaveAllData = async (lastRowData: any) => {
     // Add the last row's data and submit everything
     const allData = [...formData]
-    allData[currentRowIndex] = lastRowData
-    console.log("All form data:", allData)
-    // Your API call here with allData
+    allData[currentRowIndex] = lastRowData;
+
+    // Update the user response with the new data
+    const newUserResponse = {
+      ...userResponse,
+      response_text: allData
+    };
+
+    console.log("New user Response", newUserResponse);
+
+    // try {
+    //   const response = await updateUserResponse(newUserResponse);
+    //   if(response) {
+    //     console.log("User response updated successfully", response);
+    //   }
+    // } catch(err) {
+    //   console.error("An error occurred while saving the data", err);
+    // }
   }
+
 
 
   if (showDropdown) {

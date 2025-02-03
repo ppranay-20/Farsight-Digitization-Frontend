@@ -120,3 +120,24 @@ export async function getProcessedImage(instanceId: string, pageId1: string, pag
         throw new Error("An error occurred while fetching images");
     }
 }
+
+export async function updateUserResponse(userResponse: UserResponse) {
+    try {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/user-responses`,{
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(userResponse)
+        });
+        
+        if(!response.ok) {
+            throw new Error("Failed to update user response");
+        }
+        const data = await response.json();
+        return data;
+    } catch (error) {
+        console.error(error);
+        throw new Error("An error occurred while updating user response");
+    }
+}

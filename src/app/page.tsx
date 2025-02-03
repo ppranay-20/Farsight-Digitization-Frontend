@@ -1,6 +1,6 @@
 import FieldsSection from "@/components/document-scan/fields-section";
 import ImageSection from "@/components/document-scan/image-section";
-import { SelectedFieldProvider } from "@/components/document-scan/select-field-context/select-field-context";
+import { SelectedFieldProvider } from "@/context/select-field-context";
 import Navbar from "@/components/navbar";
 
 export default function page() {

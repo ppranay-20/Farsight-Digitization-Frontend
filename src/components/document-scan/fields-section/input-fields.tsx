@@ -8,7 +8,7 @@ import { Field, UserResponse } from "@/types/document-action";
 import { useForm } from "react-hook-form";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
-import { useSelectedField } from "../select-field-context/select-field-context";
+import { useSelectedField } from "../../../context/select-field-context";
 
 interface InputFieldProps {
   fields: Field[];

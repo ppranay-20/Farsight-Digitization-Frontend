@@ -3,7 +3,7 @@
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import Pagination from "./pagination";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Field, UserResponse } from "@/types/document-action";
 import { useForm } from "react-hook-form";
 import { cn } from "@/lib/utils";
@@ -16,10 +16,18 @@ interface InputFieldProps {
   isLastRow: boolean;
   onNextRow: (data: any) => void;
   onSaveAllData: (data: any) => void;
+  // onCoordinatesUpdate?: (fieldName: string, coordinates: number[]) => void;
 }
 
-export default function InputFields({ fields, userResponse, isLastRow, onNextRow, onSaveAllData }: InputFieldProps) {
-  const { setSelectedField } = useSelectedField();
+export default function InputFields({
+  fields,
+  userResponse,
+  isLastRow,
+  onNextRow,
+  onSaveAllData,
+  // onCoordinatesUpdate,
+}: InputFieldProps) {
+  const { selectedField, setSelectedField } = useSelectedField();
   const [currentPage, setCurrentPage] = useState(1);
   const {
     register,
@@ -71,6 +79,12 @@ export default function InputFields({ fields, userResponse, isLastRow, onNextRow
     return rules;
   };
 
+  // useEffect(() => {
+  //   if (selectedField && onCoordinatesUpdate) {
+  //     onCoordinatesUpdate(selectedField., selectedField.coordinates);
+  //   }
+  // }, [selectedField?.coordinates]);
+
   const onSubmit = (data: any) => {
     if (isLastRow) {
       onSaveAllData(data);
@@ -96,8 +110,11 @@ export default function InputFields({ fields, userResponse, isLastRow, onNextRow
                 errors[field.name] && "border-error-border"
               )}
               defaultValue={userResponse[field.name].value}
-              onFocus={() => setSelectedField(userResponse[field.name])}
-              onBlur={() => setSelectedField(null)}
+              onFocus={() => setSelectedField({
+                name: field.name,
+                coordinates: userResponse[field.name].coordinates,
+              })}
+              // onBlur={() => setSelectedField(null)}
             />
             {errors[field.name] && (
               <p className="text-error-text text-xs h-0.5">
@@ -118,7 +135,7 @@ export default function InputFields({ fields, userResponse, isLastRow, onNextRow
           className="bg-green-500 py-2 px-2 text-overflow font-inter text-sm font-medium leading-6 w-full hover:bg-none"
           type="submit"
         >
-           {isLastRow ? "Save" : "Next"}
+          {isLastRow ? "Save" : "Next"}
         </Button>
       </div>
     </form>

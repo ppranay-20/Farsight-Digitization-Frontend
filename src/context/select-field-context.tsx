@@ -1,11 +1,14 @@
 "use client";
 
 import { createContext, useContext, useState, ReactNode } from "react";
-import { FieldValue } from "@/types/document-action";
+interface SelectedField {
+  name: string;
+  coordinates: number[];
+}
 
 type SelectedFieldContextType = {
-  selectedField: FieldValue | null;
-  setSelectedField: (field: FieldValue | null) => void;
+  selectedField: SelectedField | null;
+  setSelectedField: (field: SelectedField | null) => void;
 };
 
 const SelectedFieldContext = createContext<SelectedFieldContextType>({
@@ -14,7 +17,7 @@ const SelectedFieldContext = createContext<SelectedFieldContextType>({
 });
 
 export function SelectedFieldProvider({ children }: { children: ReactNode }) {
-  const [selectedField, setSelectedField] = useState<FieldValue | null>(null);
+  const [selectedField, setSelectedField] = useState<SelectedField | null>(null);
 
   return (
     <SelectedFieldContext.Provider value={{ selectedField, setSelectedField }}>

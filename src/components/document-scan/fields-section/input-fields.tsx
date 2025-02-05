@@ -16,7 +16,6 @@ interface InputFieldProps {
   isLastRow: boolean;
   onNextRow: (data: any) => void;
   onSaveAllData: (data: any) => void;
-  // onCoordinatesUpdate?: (fieldName: string, coordinates: number[]) => void;
 }
 
 export default function InputFields({
@@ -25,7 +24,6 @@ export default function InputFields({
   isLastRow,
   onNextRow,
   onSaveAllData,
-  // onCoordinatesUpdate,
 }: InputFieldProps) {
   const { selectedField, setSelectedField } = useSelectedField();
   const [currentPage, setCurrentPage] = useState(1);
@@ -78,12 +76,6 @@ export default function InputFields({
 
     return rules;
   };
-
-  // useEffect(() => {
-  //   if (selectedField && onCoordinatesUpdate) {
-  //     onCoordinatesUpdate(selectedField., selectedField.coordinates);
-  //   }
-  // }, [selectedField?.coordinates]);
 
   const onSubmit = (data: any) => {
     if (isLastRow) {

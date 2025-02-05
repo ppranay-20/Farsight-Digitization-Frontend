@@ -14,7 +14,7 @@ interface CanvasProps {
 }
 
 export default function Canvas({ images, processedImage }: CanvasProps) {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
+  // const canvasRef = useRef<HTMLCanvasElement>(null);
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [scale, setScale] = useState(1);
   const [showProcessedImage, setShowProcessedImage] = useState(false);
@@ -22,69 +22,68 @@ export default function Canvas({ images, processedImage }: CanvasProps) {
     raw: images.leftImage,
     processed: processedImage.leftImage,
   });
-  const [image, setImage] = useState<HTMLImageElement | null>(null);
+  // const [image, setImage] = useState<HTMLImageElement | null>(null);
   const { selectedField, setSelectedField } = useSelectedField();
   const containerRef = useRef<HTMLDivElement>(null);
-  console.log(selectedField);
 
-  useEffect(() => {
-    const img = new window.Image();
-    img.src = showProcessedImage ? currentImage.processed : currentImage.raw;
-    img.onload = async () => {
-      setImage(img);
-      if (canvasRef.current) {
-        const canvas = canvasRef.current;
-        canvas.width = img.width;
-        canvas.height = img.height;
-      }
-    };
-  }, [currentImage, showProcessedImage]);
+  // useEffect(() => {
+  //   const img = new window.Image();
+  //   img.src = showProcessedImage ? currentImage.processed : currentImage.raw;
+  //   img.onload = async () => {
+  //     setImage(img);
+  //     if (canvasRef.current) {
+  //       const canvas = canvasRef.current;
+  //       canvas.width = img.width;
+  //       canvas.height = img.height;
+  //     }
+  //   };
+  // }, [currentImage, showProcessedImage]);
 
-  // Redraw the bounding box when the selected field changes or the image is loaded
-  useEffect(() => {
-    if (image) {
-      drawBoundingBoxes();
-    }
-  }, [image, selectedField]);
+  // // Redraw the bounding box when the selected field changes or the image is loaded
+  // useEffect(() => {
+  //   if (image) {
+  //     drawBoundingBoxes();
+  //   }
+  // }, [image, selectedField]);
 
-  const drawBoundingBoxes = () => {
-    if (!canvasRef.current || !image) return;
+  // const drawBoundingBoxes = () => {
+  //   if (!canvasRef.current || !image) return;
 
-    const canvas = canvasRef.current;
-    const ctx = canvas.getContext("2d");
-    if (!ctx) return;
+  //   const canvas = canvasRef.current;
+  //   const ctx = canvas.getContext("2d");
+  //   if (!ctx) return;
 
-    // Clear previous drawings
-    // ctx.clearRect(0, 0, canvas.width, canvas.height);
+  //   // Clear previous drawings
+  //   // ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    // Draw the image first
-    ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
+  //   // Draw the image first
+  //   ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
 
-    // if No selected field, return
-    if (!selectedField || !selectedField.coordinates) return;
+  //   // if No selected field, return
+  //   if (!selectedField || !selectedField.coordinates) return;
 
-    // Convert coordinates to numbers and handle the order [ymin, xmin, ymax, xmax]
-    const [ymin, xmin, ymax, xmax] = selectedField.coordinates.map((coord) =>
-      Number(coord)
-    );
+  //   // Convert coordinates to numbers and handle the order [ymin, xmin, ymax, xmax]
+  //   const [ymin, xmin, ymax, xmax] = selectedField.coordinates.map((coord) =>
+  //     Number(coord)
+  //   );
 
-    // Denormalize coordinates (as they are normalized to 1000)
-    const abs_x1 = (xmin / 1000) * canvas.width;
-    const abs_y1 = (ymin / 1000) * canvas.height;
-    const abs_x2 = (xmax / 1000) * canvas.width;
-    const abs_y2 = (ymax / 1000) * canvas.height;
+  //   // Denormalize coordinates (as they are normalized to 1000)
+  //   const abs_x1 = (xmin / 1000) * canvas.width;
+  //   const abs_y1 = (ymin / 1000) * canvas.height;
+  //   const abs_x2 = (xmax / 1000) * canvas.width;
+  //   const abs_y2 = (ymax / 1000) * canvas.height;
 
-    // Calculate width and height
-    const width = abs_x2 - abs_x1;
-    const height = abs_y2 - abs_y1;
+  //   // Calculate width and height
+  //   const width = abs_x2 - abs_x1;
+  //   const height = abs_y2 - abs_y1;
 
-    // Set styles for bounding box
-    ctx.strokeStyle = "rgba(0, 0, 255, 0.8)";
-    ctx.lineWidth = 4;
+  //   // Set styles for bounding box
+  //   ctx.strokeStyle = "rgba(0, 0, 255, 0.8)";
+  //   ctx.lineWidth = 4;
 
-    // Draw border
-    ctx.strokeRect(abs_x1, abs_y1, width, height);
-  };
+  //   // Draw border
+  //   ctx.strokeRect(abs_x1, abs_y1, width, height);
+  // };
 
   // Handle ESC key press
   useEffect(() => {
@@ -161,8 +160,9 @@ export default function Canvas({ images, processedImage }: CanvasProps) {
       ...selectedField,
       coordinates: [ymin, xmin, ymax, xmax],
     });
+  
 
-    console.log(selectedField);
+    console.log(updateCoordinates, selectedField);
   };
 
   return (
